@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoPoints — earn rewards for green actions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="phone">
+    <header class="app-header">
+      <span class="logo">🌿 EcoPoints</span>
+      <button id="reset-btn" class="reset" title="Reset demo data">↺ demo reset</button>
+    </header>
+
+    <!-- Screen 1: Home -->
+    <section id="screen-home" class="screen active">
+      <p class="greeting">Hi <span id="user-name">Bella</span> 👋</p>
+      <div class="balance-card">
+        <p class="balance-label">Your balance</p>
+        <p class="balance-value"><span id="points-balance">0</span> pts</p>
+        <p class="streak">🔥 <span id="streak-days">0</span>-day streak</p>
+      </div>
+
+      <h2>Today's suggestions</h2>
+      <ul id="suggestions" class="suggestion-list"></ul>
+
+      <h2>This week</h2>
+      <div class="week-progress">
+        <div class="week-bar"><div id="week-fill" class="week-fill"></div></div>
+        <p class="week-caption"><span id="week-points">0</span> / <span id="week-goal">150</span> pts weekly goal</p>
+      </div>
+    </section>
+
+    <!-- Screen 2: Log activity -->
+    <section id="screen-log" class="screen">
+      <h2>Log an eco action</h2>
+      <p class="hint">Tap an action you did today. Points are added instantly (honor system for the demo — verification comes later, see Next steps).</p>
+      <ul id="activity-list" class="activity-list"></ul>
+    </section>
+
+    <!-- Screen 3: Rewards -->
+    <section id="screen-rewards" class="screen">
+      <h2>Rewards shop</h2>
+      <p class="hint">Spend your points on real-world perks. Demo partners are placeholders.</p>
+      <ul id="reward-list" class="reward-list"></ul>
+      <div id="coupon" class="coupon hidden">
+        <p class="coupon-title">🎟️ Coupon unlocked!</p>
+        <p id="coupon-text"></p>
+        <p id="coupon-code" class="coupon-code"></p>
+      </div>
+    </section>
+
+    <!-- Screen 4: Impact -->
+    <section id="screen-impact" class="screen">
+      <h2>Your impact</h2>
+      <div class="impact-tiles">
+        <div class="tile">
+          <p class="tile-value" id="impact-actions">0</p>
+          <p class="tile-label">actions logged</p>
+        </div>
+        <div class="tile">
+          <p class="tile-value" id="impact-co2">0 kg</p>
+          <p class="tile-label">CO₂ avoided (est.)</p>
+        </div>
+        <div class="tile">
+          <p class="tile-value" id="impact-earned">0</p>
+          <p class="tile-label">points earned total</p>
+        </div>
+      </div>
+      <p class="disclaimer">CO₂ figures are rough per-action estimates for illustration, not verified measurements.</p>
+
+      <h2>History</h2>
+      <ul id="history-list" class="history-list">
+        <li class="empty">Nothing logged yet — go to Log and record your first action!</li>
+      </ul>
+    </section>
+
+    <nav class="tabbar">
+      <button data-screen="home" class="tab active">🏠<span>Home</span></button>
+      <button data-screen="log" class="tab">➕<span>Log</span></button>
+      <button data-screen="rewards" class="tab">🎁<span>Rewards</span></button>
+      <button data-screen="impact" class="tab">🌍<span>Impact</span></button>
+    </nav>
+
+    <div id="toast" class="toast hidden"></div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
