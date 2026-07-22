@@ -119,6 +119,23 @@ function leafScore() {
 
 // ---------- rendering ----------
 
+// One leaf in the 0–5 rating, filled left-to-right by `frac` (0..1) like a
+// star rating (feature: Profile Leafs). Rendered as SVG so empty leaves are
+// still clearly visible as outlines.
+function leafSvg(frac, i) {
+  const w = (Math.max(0, Math.min(1, frac)) * 24).toFixed(2);
+  const d = "M12 2 C 4 8, 4 16, 12 22 C 20 16, 20 8, 12 2 Z"; // symmetric pointed leaf
+  const clip = "leafclip" + i;
+  return `<svg class="leaf-icon" viewBox="0 0 24 24" width="27" height="27" aria-hidden="true">
+    <defs><clipPath id="${clip}"><rect x="0" y="0" width="${w}" height="24"/></clipPath></defs>
+    <path d="${d}" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.85)" stroke-width="1.2"/>
+    <g clip-path="url(#${clip})">
+      <path d="${d}" fill="#ffffff" stroke="rgba(255,255,255,0.85)" stroke-width="1.2"/>
+    </g>
+    <line x1="12" y1="3.5" x2="12" y2="20.5" stroke="rgba(21,128,61,0.35)" stroke-width="1"/>
+  </svg>`;
+}
+
 function render() {
   // Home
   document.getElementById("points-balance").textContent = state.balance;
@@ -167,10 +184,8 @@ function renderProfile() {
 
   const logs = logEntries();
   const score = leafScore();
-  const full = Math.round(score);
   document.getElementById("leaf-rating").innerHTML =
-    '<span class="leaf on">🌿</span>'.repeat(full) +
-    '<span class="leaf off">🌿</span>'.repeat(5 - full);
+    [0, 1, 2, 3, 4].map(i => leafSvg(score - i, i)).join("");
   document.getElementById("leaf-score").textContent = score.toFixed(1);
   const blurb =
     score === 0 ? "start logging to grow your rating" :
