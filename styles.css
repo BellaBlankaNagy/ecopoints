@@ -303,9 +303,8 @@ h2 { font-size: 0.95rem; color: var(--green-900); margin: 18px 0 8px; }
   box-shadow: 0 4px 14px rgba(21, 128, 61, 0.35);
 }
 .leaf-label { font-size: 0.8rem; opacity: 0.85; }
-.leaf-rating { font-size: 1.5rem; margin: 4px 0; }
-.leaf-rating .leaf { margin-right: 4px; }
-.leaf-rating .off { opacity: 0.35; filter: grayscale(1); }
+.leaf-rating { margin: 6px 0; display: flex; gap: 5px; }
+.leaf-icon { display: block; }
 .leaf-caption { font-size: 0.78rem; opacity: 0.9; }
 
 /* Tracked habits */
