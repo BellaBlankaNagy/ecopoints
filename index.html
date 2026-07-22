@@ -36,7 +36,10 @@
     <section id="screen-log" class="screen">
       <h2>Log an eco action</h2>
       <p class="hint">Tap an action you did today. Points are added instantly (honor system for the demo — verification comes later, see Next steps).</p>
+      <input type="search" id="activity-search" class="search-box" placeholder="🔍 Search actions…" autocomplete="off">
+      <div id="category-filter" class="category-filter"></div>
       <ul id="activity-list" class="activity-list"></ul>
+      <p id="no-results" class="no-results hidden">No actions match your search.</p>
     </section>
 
     <!-- Screen 3: Rewards -->

@@ -1,15 +1,26 @@
 // EcoPoints — hackathon demo (client-only, data in localStorage)
 
 const ACTIVITIES = [
-  { id: "bike",      name: "🚲 Biked instead of driving",      pts: 20, co2: 2.0 },
-  { id: "transit",   name: "🚌 Took public transport",         pts: 10, co2: 1.2 },
-  { id: "cup",       name: "☕ Used a reusable cup",            pts: 5,  co2: 0.05 },
-  { id: "recycle",   name: "♻️ Recycled properly",             pts: 5,  co2: 0.3 },
-  { id: "veg",       name: "🥦 Ate a vegetarian meal",          pts: 10, co2: 1.5 },
-  { id: "secondhand",name: "👕 Bought second-hand",             pts: 15, co2: 3.0 },
-  { id: "bottle",    name: "💧 Refilled a water bottle",        pts: 5,  co2: 0.08 },
-  { id: "lights",    name: "💡 Cut standby / lights off day",   pts: 5,  co2: 0.2 },
+  { id: "bike",      name: "🚲 Biked instead of driving",      pts: 20, co2: 2.0,  cat: "transport" },
+  { id: "transit",   name: "🚌 Took public transport",         pts: 10, co2: 1.2,  cat: "transport" },
+  { id: "cup",       name: "☕ Used a reusable cup",            pts: 5,  co2: 0.05, cat: "waste" },
+  { id: "recycle",   name: "♻️ Recycled properly",             pts: 5,  co2: 0.3,  cat: "waste" },
+  { id: "veg",       name: "🥦 Ate a vegetarian meal",          pts: 10, co2: 1.5,  cat: "food" },
+  { id: "secondhand",name: "👕 Bought second-hand",             pts: 15, co2: 3.0,  cat: "shopping" },
+  { id: "bottle",    name: "💧 Refilled a water bottle",        pts: 5,  co2: 0.08, cat: "waste" },
+  { id: "lights",    name: "💡 Cut standby / lights off day",   pts: 5,  co2: 0.2,  cat: "home" },
 ];
+
+// Task categories for the Log screen filter. "all" is the default chip.
+const CATEGORIES = [
+  { id: "all",       label: "🌍 All" },
+  { id: "transport", label: "🚲 Transport" },
+  { id: "food",      label: "🥦 Food" },
+  { id: "shopping",  label: "🛍️ Shopping" },
+  { id: "waste",     label: "♻️ Waste" },
+  { id: "home",      label: "🏠 Home" },
+];
+const CATEGORY_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.id, c.label]));
 
 const REWARDS = [
   { id: "coffee",  name: "☕ Free coffee at GreenBean Café",     cost: 50 },
@@ -111,23 +122,46 @@ function render() {
   });
 }
 
+// Log-screen filter state
+let activeCategory = "all";
+let searchTerm = "";
+
+function renderCategoryChips() {
+  document.getElementById("category-filter").innerHTML = CATEGORIES
+    .map(c => `<button class="chip${c.id === activeCategory ? " active" : ""}" data-cat="${c.id}">${c.label}</button>`)
+    .join("");
+}
+
+function renderActivities() {
+  const q = searchTerm.trim().toLowerCase();
+  const shown = ACTIVITIES.filter(a =>
+    (activeCategory === "all" || a.cat === activeCategory) &&
+    (q === "" || a.name.toLowerCase().includes(q))
+  );
+
+  document.getElementById("activity-list").innerHTML = shown
+    .map(a => `
+      <li>
+        <div>
+          <div class="activity-name">${a.name}</div>
+          <div class="activity-co2">~${a.co2} kg CO₂ avoided · +${a.pts} pts</div>
+          <span class="activity-cat">${CATEGORY_LABEL[a.cat]}</span>
+        </div>
+        <button class="btn btn-log" data-id="${a.id}">Log it</button>
+      </li>`)
+    .join("");
+
+  document.getElementById("no-results").classList.toggle("hidden", shown.length > 0);
+}
+
 function renderStatic() {
   // Suggestions (top 3 activities)
   document.getElementById("suggestions").innerHTML = ACTIVITIES.slice(0, 3)
     .map(a => `<li><span>${a.name}</span><span class="pts">+${a.pts} pts</span></li>`)
     .join("");
 
-  // Activity list
-  document.getElementById("activity-list").innerHTML = ACTIVITIES
-    .map(a => `
-      <li>
-        <div>
-          <div class="activity-name">${a.name}</div>
-          <div class="activity-co2">~${a.co2} kg CO₂ avoided · +${a.pts} pts</div>
-        </div>
-        <button class="btn btn-log" data-id="${a.id}">Log it</button>
-      </li>`)
-    .join("");
+  renderCategoryChips();
+  renderActivities();
 
   // Reward list
   document.getElementById("reward-list").innerHTML = REWARDS
@@ -187,6 +221,21 @@ function showScreen(name) {
 document.querySelectorAll(".tab").forEach(t =>
   t.addEventListener("click", () => showScreen(t.dataset.screen))
 );
+
+// Live search over eco actions
+document.getElementById("activity-search").addEventListener("input", e => {
+  searchTerm = e.target.value;
+  renderActivities();
+});
+
+// Category filter chips
+document.getElementById("category-filter").addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  activeCategory = chip.dataset.cat;
+  renderCategoryChips();
+  renderActivities();
+});
 
 document.addEventListener("click", e => {
   const logBtn = e.target.closest(".btn-log");
