@@ -35,8 +35,20 @@
     <!-- Screen 2: Log activity -->
     <section id="screen-log" class="screen">
       <h2>Log an eco action</h2>
-      <p class="hint">Tap an action you did today. Points are added instantly (honor system for the demo — verification comes later, see Next steps).</p>
+      <p class="hint">Tap an action you did today, then confirm how you can prove it. Validated actions earn a bonus and a ✓ badge.</p>
+
+      <!-- Search -->
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input id="activity-search" type="search" placeholder="Search actions…" autocomplete="off">
+        <button id="search-clear" class="search-clear hidden" title="Clear search">✕</button>
+      </div>
+
+      <!-- Category filter -->
+      <div id="category-chips" class="chips"></div>
+
       <ul id="activity-list" class="activity-list"></ul>
+      <p id="activity-empty" class="empty hidden">No actions match your search.</p>
     </section>
 
     <!-- Screen 3: Rewards -->
@@ -76,12 +88,77 @@
       </ul>
     </section>
 
+    <!-- Screen 5: Profile -->
+    <section id="screen-profile" class="screen">
+      <div class="profile-head">
+        <div class="avatar">🌱</div>
+        <div>
+          <p class="profile-name" id="profile-name">Bella</p>
+          <p class="profile-sub">EcoPoints member</p>
+        </div>
+      </div>
+
+      <div class="leaf-card">
+        <p class="leaf-label">Your eco rating</p>
+        <p id="leaf-rating" class="leaf-rating">🌿🌿🌿🌿🌿</p>
+        <p class="leaf-caption"><span id="leaf-score">0.0</span> / 5 leaves · <span id="leaf-blurb">start logging to grow your rating</span></p>
+      </div>
+
+      <h2>Verified actions</h2>
+      <div class="impact-tiles">
+        <div class="tile">
+          <p class="tile-value" id="verified-count">0</p>
+          <p class="tile-label">validated</p>
+        </div>
+        <div class="tile">
+          <p class="tile-value" id="verified-rate">0%</p>
+          <p class="tile-label">of all actions</p>
+        </div>
+        <div class="tile">
+          <p class="tile-value" id="category-count">0</p>
+          <p class="tile-label">categories tried</p>
+        </div>
+      </div>
+
+      <h2>Tracked habits</h2>
+      <p class="hint">Star any action on the Log screen to track it here as a weekly goal (target: 3× / week).</p>
+      <ul id="tracker-list" class="tracker-list">
+        <li class="empty">No habits tracked yet — tap ☆ on an action to start.</li>
+      </ul>
+    </section>
+
     <nav class="tabbar">
       <button data-screen="home" class="tab active">🏠<span>Home</span></button>
       <button data-screen="log" class="tab">➕<span>Log</span></button>
       <button data-screen="rewards" class="tab">🎁<span>Rewards</span></button>
       <button data-screen="impact" class="tab">🌍<span>Impact</span></button>
+      <button data-screen="profile" class="tab">👤<span>Profile</span></button>
     </nav>
+
+    <!-- Validation modal -->
+    <div id="validate-modal" class="modal-backdrop hidden">
+      <div class="modal">
+        <p class="modal-title" id="validate-title">Validate action</p>
+        <p class="modal-sub" id="validate-sub"></p>
+        <div class="validate-options">
+          <button class="validate-opt" data-method="partner">
+            <span class="vo-icon">🤝</span>
+            <span class="vo-text"><strong>Partner check-in</strong><small id="partner-name">Confirm with a partner venue</small></span>
+            <span class="vo-bonus">+bonus</span>
+          </button>
+          <button class="validate-opt" data-method="receipt">
+            <span class="vo-icon">🧾</span>
+            <span class="vo-text"><strong>Upload receipt</strong><small>Attach a photo of proof</small></span>
+            <span class="vo-bonus">+bonus</span>
+          </button>
+          <button class="validate-opt" data-method="honor">
+            <span class="vo-icon">✋</span>
+            <span class="vo-text"><strong>Honor system</strong><small>Log without proof</small></span>
+          </button>
+        </div>
+        <button id="validate-cancel" class="modal-cancel">Cancel</button>
+      </div>
+    </div>
 
     <div id="toast" class="toast hidden"></div>
   </main>
