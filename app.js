@@ -82,6 +82,25 @@ function totalCo2() {
     .reduce((sum, h) => sum + (h.co2 || 0), 0);
 }
 
+// Eco rating on a 5-leaf scale (5-star method), earned from total points.
+const RATING_TIERS = [
+  { min: 500, leaves: 5, name: "Eco Champion 🌟" },
+  { min: 300, leaves: 4, name: "Eco Hero" },
+  { min: 150, leaves: 3, name: "Grower" },
+  { min: 75,  leaves: 2, name: "Sprout" },
+  { min: 25,  leaves: 1, name: "Seedling" },
+  { min: 0,   leaves: 0, name: "Just getting started" },
+];
+
+function ecoRating() {
+  const tier = RATING_TIERS.find(t => state.earned >= t.min);
+  const nextThreshold = RATING_TIERS
+    .map(t => t.min)
+    .filter(min => min > state.earned)
+    .sort((a, b) => a - b)[0];
+  return { ...tier, nextThreshold };
+}
+
 // ---------- rendering ----------
 
 function render() {
@@ -98,6 +117,15 @@ function render() {
   document.getElementById("impact-actions").textContent = logs.length;
   document.getElementById("impact-co2").textContent = totalCo2().toFixed(1) + " kg";
   document.getElementById("impact-earned").textContent = state.earned;
+
+  // Eco rating (5 leaves)
+  const r = ecoRating();
+  document.getElementById("rating-leaves").innerHTML = Array.from({ length: 5 }, (_, i) =>
+    `<span class="${i < r.leaves ? "leaf-on" : "leaf-off"}">🍃</span>`).join("");
+  document.getElementById("rating-tier").textContent = r.name;
+  document.getElementById("rating-detail").textContent = r.nextThreshold
+    ? `${r.nextThreshold - state.earned} pts to next leaf`
+    : "top rating reached";
 
   // History
   const hist = document.getElementById("history-list");
